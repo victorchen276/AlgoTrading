@@ -4,7 +4,11 @@ from ibapi.common import BarData
 from ibapi.wrapper import EWrapper
 from ibapi.contract import Contract
 
+import pandas as pd
+
 from datetime import datetime
+import threading
+import time
 
 class TradingApp(EWrapper, EClient):
     def __init__(self):
@@ -19,35 +23,38 @@ class TradingApp(EWrapper, EClient):
     def historicalData(self, reqId: int, bar: BarData):
         print("HostroicalData. RegId:", reqId, "BarData.", bar)
 
+def websocket_con():
+    app.reqHistoricalData(reqId=1,
+                          contract=contract,
+                          endDateTime='',
+                          durationStr='3 M',
+                          barSizeSetting='5 mins',
+                          whatToShow='ADJUSTED_LAST',
+                          useRTH=1,
+                          formatDate=1,
+                          keepUpToDate=0,
+                          chartOptions=[])
+    print("bbbbb")
+    app.run()
+
+
+
 app = TradingApp()
 # 7497 paper account port
 # 7496 real user
-app.connect("127.0.0.1", 7497, clientId=1022)
+app.connect("127.0.0.1", 7497, clientId=1)
+time.sleep(1)
 
 contract = Contract()
-contract.symbol = "AAPL"
+contract.symbol = "FB"
 contract.secType = "STK"
 contract.currency = "USD"
-contract.exchange ="SMART"
+contract.exchange = "SMART"
 # app.reqContractDetails(100, contract)
 
-app.reqHistoricalData(reqId=11,
-                      contract=contract,
-                      endDateTime='',
-                      durationStr='3 M',
-                      barSizeSetting='5 mins',
-                      whatToShow='MIDPOINT',
-                      useRTH=1,
-                      formatDate=1,
-                      keepUpToDate=0,
-                      chartOptions=[])
+con_thread = threading.Thread(target=websocket_con(), daemon=True)
+con_thread.start()
 
-# queryTime = (datetime.today() - datetime (days=180)).strftime("%Y%m%d %H:%M:%S")
-# app.reqHistoricalData(4103, contract, queryTime, "1 M", "1 day", "SCHEDULE", 1, 1, False, [])
-
-app.run()
-
-print('aaaa')
 
 
 
