@@ -34,7 +34,6 @@ def websocket_con():
                           formatDate=1,
                           keepUpToDate=0,
                           chartOptions=[])
-    print("bbbbb")
     app.run()
 
 
