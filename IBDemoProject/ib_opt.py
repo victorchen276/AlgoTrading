@@ -4,6 +4,7 @@ from ibapi.wrapper import EWrapper
 from ibapi.contract import Contract
 
 import pandas as pd
+import numpy as np
 
 import threading
 import time
